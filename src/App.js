@@ -51,6 +51,16 @@ export default function App() {
     (state) => state.Reducers.profile_complete
   );
   const profile = useSelector((state) => state.Reducers.profile);
+  console.log(profile);
+  const profile_complete = useSelector(
+    (state) => state.Reducers.profile_complete
+  );
+  const profile = useSelector((state) => state.Reducers.profile);
+  console.log(profile);
+  const profile_complete = useSelector(
+    (state) => state.Reducers.profile_complete
+  );
+  const is_verified = useSelector((state) => state.Reducers.is_verified);
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(Init());
@@ -149,8 +159,8 @@ export default function App() {
               )
             }
             element={
-              !profile_complete ? (
-                !profile?.is_verified ? (
+              profile_complete ? (
+                profile?.is_verified ? (
                   <Mobile />
                 ) : (
                   <Complete />
