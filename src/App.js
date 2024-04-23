@@ -37,11 +37,12 @@ import Verification from './Screens/Constants/Verification';
 export default function App() {
   const cartOpen = useSelector((state) => state.Reducers.cartOpen);
   const access = useSelector((state) => state.Reducers.access);
-  const profile_complete = useSelector(
-    (state) => state.Reducers.profile_complete
+  const profile = useSelector((state) => state.Reducers.profile);
+  console.log(
+    access != null ? (profile?.is_verified ? 'hello' : 'kyc') : 'bolo'
   );
-  const is_verified = useSelector((state) => state.Reducers.is_verified);
   const dispatch = useDispatch();
+  console.log(profile);
   React.useEffect(() => {
     dispatch(Init());
     dispatch(GetCateogry());
@@ -51,7 +52,7 @@ export default function App() {
     if (access != null) {
       dispatch(GetProfile());
     }
-  }, [dispatch]);
+  }, []);
   return (
     <>
       {cartOpen ? <Cart /> : null}
@@ -61,148 +62,373 @@ export default function App() {
         <div className=' md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600 '>
           <MenuIcons />
         </div>
-        <Routes>
-          <Route
-            path='/'
-            element={<HomePage />}
-          />
-          <Route
-            path='/login'
-            element={access === null ? <Login /> : <HomePage />}
-          />
-          <Route
-            path='/register'
-            element={access === null ? <Registration /> : <HomePage />}
-          />
-          <Route
-            path='/category'
-            element={<Products />}
-          />
-          <Route
-            path='/cards'
-            element={<Cards />}
-          />
-          <Route
-            path='/otp'
-            element={access === null ? <OTPForm /> : <HomePage />}
-          />
-          <Route
-            path='/search'
-            element={<Search />}
-          />
-          <Route
-            path='/products'
-            element={<Sub />}
-          />
-          <Route
-            path='/details'
-            element={<Details />}
-          />
-          <Route
-            path='/privacypage'
-            element={<Privacypage />}
-          />
-          <Route
-            path='/terms'
-            element={<Terms />}
-          />
-          <Route
-            path='/refund'
-            element={<Refund />}
-          />
-          <Route
-            path='/mobile'
-            element={
-              profile_complete ? (
-                is_verified ? (
-                  <Mobile />
-                ) : (
-                  <Verification />
-                )
-              ) : (
-                <Complete />
-              )
-            }
-          />
-          <Route
-            path='/myaccount'
-            element={
-              access != null ? (
-                profile_complete ? (
-                  is_verified ? (
-                    <MyAccount />
-                  ) : (
-                    <Verification />
-                  )
-                ) : (
-                  <Complete />
-                )
-              ) : (
-                <Login />
-              )
-            }
-          />
-          <Route
-            path='/cartcheckout'
-            element={
-              access != null ? (
-                profile_complete ? (
-                  is_verified ? (
-                    <CartCheckout />
-                  ) : (
-                    <Verification />
-                  )
-                ) : (
-                  <Complete />
-                )
-              ) : (
-                <Login />
-              )
-            }
-          />
-          <Route
-            path='/payment'
-            element={
-              access != null ? (
-                profile_complete ? (
-                  is_verified ? (
-                    <PaymentPage />
-                  ) : (
-                    <Verification />
-                  )
-                ) : (
-                  <Complete />
-                )
-              ) : (
-                <Login />
-              )
-            }
-          />
-          <Route
-            path='/cards'
-            element={<Cards />}
-          />
-          <Route
-            path='/subcategory/:id'
-            element={<Sub />}
-          />
-          <Route
-            path='/details/:id'
-            element={<Details />}
-          />
-          <Route
-            path='/success'
-            element={access != null ? <SuccessPage /> : <Login />}
-          />
-          <Route
-            path='/kycverification'
-            element={<Complete />}
-          />
-          <Route
-            path='/under-verification'
-            element={<Verification />}
-          />
-        </Routes>
+        {access != null ? (
+          profile?.is_verified ? (
+            <Routes>
+              <Route
+                path='/'
+                element={<HomePage />}
+              />
+              <Route
+                path='/login'
+                element={access === null ? <Login /> : <HomePage />}
+              />
+              <Route
+                path='/register'
+                element={access === null ? <Registration /> : <HomePage />}
+              />
+              <Route
+                path='/category'
+                element={<Products />}
+              />
+              <Route
+                path='/cards'
+                element={<Cards />}
+              />
+              <Route
+                path='/otp'
+                element={access === null ? <OTPForm /> : <HomePage />}
+              />
+              <Route
+                path='/search'
+                element={<Search />}
+              />
+              <Route
+                path='/products'
+                element={<Sub />}
+              />
+              <Route
+                path='/details'
+                element={<Details />}
+              />
+              <Route
+                path='/privacypage'
+                element={<Privacypage />}
+              />
+              <Route
+                path='/terms'
+                element={<Terms />}
+              />
+              <Route
+                path='/refund'
+                element={<Refund />}
+              />
+              <Route
+                path='/mobile'
+                element={<Mobile />}
+              />
+              <Route
+                path='/myaccount'
+                element={<MyAccount />}
+              />
+              <Route
+                path='/cartcheckout'
+                element={<CartCheckout />}
+              />
+              <Route
+                path='/payment'
+                element={<PaymentPage />}
+              />
+              <Route
+                path='/cards'
+                element={<Cards />}
+              />
+              <Route
+                path='/subcategory/:id'
+                element={<Sub />}
+              />
+              <Route
+                path='/details/:id'
+                element={<Details />}
+              />
+              <Route
+                path='/success'
+                element={access != null ? <SuccessPage /> : <Login />}
+              />
+              <Route
+                path='/kycverification'
+                element={<Complete />}
+              />
+              <Route
+                path='/under-verification'
+                element={<Verification />}
+              />
+            </Routes>
+          ) : profile?.is_profile_complete && profile?.role != 'Customer' ? (
+            <Routes>
+              <Route
+                path='/'
+                element={<Navigate to={'/under-verification'} />}
+              />
+              <Route
+                path='/login'
+                element={access === null ? <Login /> : <HomePage />}
+              />
+              <Route
+                path='/register'
+                element={access === null ? <Registration /> : <HomePage />}
+              />
+              <Route
+                path='/category'
+                element={<Products />}
+              />
+              <Route
+                path='/cards'
+                element={<Cards />}
+              />
+              <Route
+                path='/otp'
+                element={access === null ? <OTPForm /> : <HomePage />}
+              />
+              <Route
+                path='/search'
+                element={<Search />}
+              />
+              <Route
+                path='/products'
+                element={<Sub />}
+              />
+              <Route
+                path='/details'
+                element={<Details />}
+              />
+              <Route
+                path='/privacypage'
+                element={<Privacypage />}
+              />
+              <Route
+                path='/terms'
+                element={<Terms />}
+              />
+              <Route
+                path='/refund'
+                element={<Refund />}
+              />
+              <Route
+                path='/mobile'
+                element={<Mobile />}
+              />
+              <Route
+                path='/myaccount'
+                element={<MyAccount />}
+              />
+              <Route
+                path='/cartcheckout'
+                element={<CartCheckout />}
+              />
+              <Route
+                path='/payment'
+                element={<PaymentPage />}
+              />
+              <Route
+                path='/cards'
+                element={<Cards />}
+              />
+              <Route
+                path='/subcategory/:id'
+                element={<Sub />}
+              />
+              <Route
+                path='/details/:id'
+                element={<Details />}
+              />
+              <Route
+                path='/success'
+                element={access != null ? <SuccessPage /> : <Login />}
+              />
+              <Route
+                path='/kycverification'
+                element={<Complete />}
+              />
+              <Route
+                path='/under-verification'
+                element={<Verification />}
+              />
+            </Routes>
+          ) : (
+            <Routes>
+              <Route
+                path='/'
+                element={<Navigate to={'/kycverification'} />}
+              />
+              <Route
+                path='/login'
+                element={access === null ? <Login /> : <HomePage />}
+              />
+              <Route
+                path='/register'
+                element={access === null ? <Registration /> : <HomePage />}
+              />
+              <Route
+                path='/category'
+                element={<Products />}
+              />
+              <Route
+                path='/cards'
+                element={<Cards />}
+              />
+              <Route
+                path='/otp'
+                element={access === null ? <OTPForm /> : <HomePage />}
+              />
+              <Route
+                path='/search'
+                element={<Search />}
+              />
+              <Route
+                path='/products'
+                element={<Sub />}
+              />
+              <Route
+                path='/details'
+                element={<Details />}
+              />
+              <Route
+                path='/privacypage'
+                element={<Privacypage />}
+              />
+              <Route
+                path='/terms'
+                element={<Terms />}
+              />
+              <Route
+                path='/refund'
+                element={<Refund />}
+              />
+              <Route
+                path='/mobile'
+                element={<Mobile />}
+              />
+              <Route
+                path='/myaccount'
+                element={<MyAccount />}
+              />
+              <Route
+                path='/cartcheckout'
+                element={<CartCheckout />}
+              />
+              <Route
+                path='/payment'
+                element={<PaymentPage />}
+              />
+              <Route
+                path='/cards'
+                element={<Cards />}
+              />
+              <Route
+                path='/subcategory/:id'
+                element={<Sub />}
+              />
+              <Route
+                path='/details/:id'
+                element={<Details />}
+              />
+              <Route
+                path='/success'
+                element={access != null ? <SuccessPage /> : <Login />}
+              />
+              <Route
+                path='/kycverification'
+                element={<Complete />}
+              />
+              <Route
+                path='/under-verification'
+                element={<Verification />}
+              />
+            </Routes>
+          )
+        ) : (
+          <Routes>
+            <Route
+              path='/'
+              element={<HomePage />}
+            />
+            <Route
+              path='/login'
+              element={access === null ? <Login /> : <HomePage />}
+            />
+            <Route
+              path='/register'
+              element={access === null ? <Registration /> : <HomePage />}
+            />
+            <Route
+              path='/category'
+              element={<Products />}
+            />
+            <Route
+              path='/cards'
+              element={<Cards />}
+            />
+            <Route
+              path='/otp'
+              element={access === null ? <OTPForm /> : <HomePage />}
+            />
+            <Route
+              path='/search'
+              element={<Search />}
+            />
+            <Route
+              path='/products'
+              element={<Sub />}
+            />
+            <Route
+              path='/details'
+              element={<Details />}
+            />
+            <Route
+              path='/privacypage'
+              element={<Privacypage />}
+            />
+            <Route
+              path='/terms'
+              element={<Terms />}
+            />
+            <Route
+              path='/refund'
+              element={<Refund />}
+            />
+            <Route
+              path='/mobile'
+              element={<Mobile />}
+            />
+            <Route
+              path='/myaccount'
+              element={<MyAccount />}
+            />
+            <Route
+              path='/cartcheckout'
+              element={<CartCheckout />}
+            />
+            <Route
+              path='/payment'
+              element={<PaymentPage />}
+            />
+            <Route
+              path='/cards'
+              element={<Cards />}
+            />
+            <Route
+              path='/subcategory/:id'
+              element={<Sub />}
+            />
+            <Route
+              path='/details/:id'
+              element={<Details />}
+            />
+            <Route
+              path='/success'
+              element={access != null ? <SuccessPage /> : <Login />}
+            />
+            <Route
+              path='/kycverification'
+              element={<Complete />}
+            />
+            <Route
+              path='/under-verification'
+              element={<Verification />}
+            />
+          </Routes>
+        )}
         <Footer />
       </div>
     </>
