@@ -1,19 +1,19 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetProducts,Init } from '../../Store/actions';
+import { GetProducts, Init } from '../../Store/actions';
 import { Oval } from 'react-loader-spinner';
 
 function Sub() {
   const { state } = useLocation();
   const [loading, setLoading] = React.useState(false);
   const role = useSelector((state) => state.Reducers.role);
-  const [products,setproducts] =  React.useState([]);
+  const [products, setproducts] = React.useState([]);
 
   // console.log(role)
   const dispatch = useDispatch();
   React.useEffect(() => {
-    dispatch(GetProducts(state?.id,setproducts, setLoading, role));
+    dispatch(GetProducts(state?.id, setproducts, setLoading, role));
   }, []);
   console.log(products);
   return (

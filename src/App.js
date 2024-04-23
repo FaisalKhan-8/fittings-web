@@ -40,7 +40,8 @@ export default function App() {
   const profile_complete = useSelector(
     (state) => state.Reducers.profile_complete
   );
-  const is_verified = useSelector((state) => state.Reducers.is_verified);
+  const profile = useSelector((state) => state.Reducers.profile);
+  console.log(profile);
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(Init());
@@ -114,7 +115,7 @@ export default function App() {
             path='/mobile'
             element={
               profile_complete ? (
-                is_verified ? (
+                profile?.is_verified ? (
                   <Mobile />
                 ) : (
                   <Verification />
@@ -129,7 +130,7 @@ export default function App() {
             element={
               access != null ? (
                 profile_complete ? (
-                  is_verified ? (
+                  profile?.is_verified ? (
                     <MyAccount />
                   ) : (
                     <Verification />
@@ -147,7 +148,7 @@ export default function App() {
             element={
               access != null ? (
                 profile_complete ? (
-                  is_verified ? (
+                  profile?.is_verified ? (
                     <CartCheckout />
                   ) : (
                     <Verification />
@@ -165,7 +166,7 @@ export default function App() {
             element={
               access != null ? (
                 profile_complete ? (
-                  is_verified ? (
+                  profile?.is_verified ? (
                     <PaymentPage />
                   ) : (
                     <Verification />
