@@ -341,9 +341,13 @@ export const GetSubCateogry = (id, setData) => {
 
 export const GetProducts = (id, setData, setLoading) => {
 
+export const GetProducts = (id, setData, setLoading, role) => {
+    console.log("dd", role)
+    setLoading(true)
     return async dispatch => {
         await axios.get(baseURL + `product/sub-categories/${id}/`)
             .then((res) => {
+                setData(res.data)
                 setData(res.data)
                 setLoading(false);
             }).catch((err) => {

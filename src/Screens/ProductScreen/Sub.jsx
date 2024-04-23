@@ -9,10 +9,12 @@ function Sub() {
   const [loading, setLoading] = React.useState(false);
   const role = useSelector((state) => state.Reducers.role);
   const [products, setproducts] = React.useState([]);
+  const [products, setproducts] = React.useState([]);
 
   // console.log(role)
   const dispatch = useDispatch();
   React.useEffect(() => {
+    dispatch(GetProducts(state?.id, setproducts, setLoading, role));
     dispatch(GetProducts(state?.id, setproducts, setLoading, role));
   }, []);
   console.log(products);
