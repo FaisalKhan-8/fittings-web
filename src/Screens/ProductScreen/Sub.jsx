@@ -14,7 +14,6 @@ function Sub() {
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(GetProducts(state?.id, setproducts, setLoading, role));
-    dispatch(GetProducts(state?.id, setproducts, setLoading, role));
   }, []);
   console.log(products);
   return (
