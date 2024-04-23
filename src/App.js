@@ -42,6 +42,10 @@ export default function App() {
   );
   const profile = useSelector((state) => state.Reducers.profile);
   console.log(profile);
+  const profile_complete = useSelector(
+    (state) => state.Reducers.profile_complete
+  );
+  const is_verified = useSelector((state) => state.Reducers.is_verified);
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(Init());
@@ -50,6 +54,7 @@ export default function App() {
     dispatch(GetSpotlight());
     dispatch(GetBest());
     if (access != null) {
+      dispatch(GetProfile());
       dispatch(GetProfile());
     }
   }, [dispatch]);
@@ -70,9 +75,11 @@ export default function App() {
           <Route
             path='/login'
             element={access === null ? <Login /> : <HomePage />}
+            element={access === null ? <Login /> : <HomePage />}
           />
           <Route
             path='/register'
+            element={access === null ? <Registration /> : <HomePage />}
             element={access === null ? <Registration /> : <HomePage />}
           />
           <Route
@@ -85,6 +92,7 @@ export default function App() {
           />
           <Route
             path='/otp'
+            element={access === null ? <OTPForm /> : <HomePage />}
             element={access === null ? <OTPForm /> : <HomePage />}
           />
           <Route
@@ -124,6 +132,17 @@ export default function App() {
                 <Complete />
               )
             }
+            element={
+              profile_complete ? (
+                is_verified ? (
+                  <Mobile />
+                ) : (
+                  <Verification />
+                )
+              ) : (
+                <Complete />
+              )
+            }
           />
           <Route
             path='/myaccount'
@@ -131,6 +150,21 @@ export default function App() {
               access != null ? (
                 profile_complete ? (
                   profile?.is_verified ? (
+                    <MyAccount />
+                  ) : (
+                    <Verification />
+                  )
+                ) : (
+                  <Complete />
+                )
+              ) : (
+                <Login />
+              )
+            }
+            element={
+              access != null ? (
+                profile_complete ? (
+                  is_verified ? (
                     <MyAccount />
                   ) : (
                     <Verification />
@@ -160,6 +194,21 @@ export default function App() {
                 <Login />
               )
             }
+            element={
+              access != null ? (
+                profile_complete ? (
+                  is_verified ? (
+                    <CartCheckout />
+                  ) : (
+                    <Verification />
+                  )
+                ) : (
+                  <Complete />
+                )
+              ) : (
+                <Login />
+              )
+            }
           />
           <Route
             path='/payment'
@@ -167,6 +216,21 @@ export default function App() {
               access != null ? (
                 profile_complete ? (
                   profile?.is_verified ? (
+                    <PaymentPage />
+                  ) : (
+                    <Verification />
+                  )
+                ) : (
+                  <Complete />
+                )
+              ) : (
+                <Login />
+              )
+            }
+            element={
+              access != null ? (
+                profile_complete ? (
+                  is_verified ? (
                     <PaymentPage />
                   ) : (
                     <Verification />
