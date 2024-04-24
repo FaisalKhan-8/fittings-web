@@ -4,29 +4,30 @@ import 'react-toastify/dist/ReactToastify.css';
 import axiosIns, { baseURL } from '../Helper/Helper';
 
 export const Init = () => {
-    return async dispatch => {
-        try {
-            const access = await localStorage.getItem('access');
-            const user_role = await localStorage.getItem('role');
-            const cart = await localStorage.getItem('cart');
-            const profile_complete = await localStorage.getItem('profile_complete');
-
-            dispatch(
-                {
-                    type: 'LOGIN',
-                    payload: {
-                        access: access,
-                        user_role: user_role === null ? 1 : user_role,
-                        profile_complete: profile_complete === null ? false : profile_complete,
-                        is_verified: is_verified === null ? false : is_verified
-                        profile_complete: profile_complete === null ? false : profile_complete
-                    },
-                },
-                {
-                    type: 'CART',
-                    payload: JSON.parse(cart)
-                }
-            )
+  return async (dispatch) => {
+    try {
+      const access = await localStorage.getItem('access');
+      const user_role = await localStorage.getItem('role');
+      const cart = await localStorage.getItem('cart');
+      const profile_complete = JSON.parse(
+        await localStorage.getItem('profile_complete')
+      );
+      const is_verified = JSON.parse(await localStorage.getItem('is_verified'));
+      console.log('init', user_role);
+      dispatch(
+        {
+          type: 'LOGIN',
+          payload: {
+            access: access,
+            user_role: user_role === null ? 1 : user_role,
+            profile_complete:
+              profile_complete === null ? false : profile_complete,
+            is_verified: is_verified === null ? false : is_verified,
+          },
+        },
+        {
+          type: 'CART',
+          payload: JSON.parse(cart),
         }
       );
     } catch (err) {}
@@ -42,55 +43,46 @@ export const LoginAction = (setLoading, data, navigate) => {
       await localStorage.setItem('role', response.data.user_role);
       await localStorage.setItem(
         'profile_complete',
-        response.data.profile_complete
+        response.data.is_profile_complete
       );
+      await localStorage.setItem('is_verified', response.data.is_verify);
 
-            dispatch({
-                type: 'LOGIN',
-                payload: {
-                    access: response?.data?.access,
-                    user_role: response?.data?.user_role,
-                    profile_complete: response?.data?.is_profile_complete,
-                    is_verified: response?.data?.is_verify
-                    profile_complete: response?.data?.is_profile_complete
-                },
-            })
-            setLoading(false);
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          access: response?.data?.access,
+          user_role: response?.data?.user_role,
+          profile_complete: response?.data?.is_profile_complete,
+          is_verified: response?.data?.is_verify,
+        },
+      });
+      setLoading(false);
 
-            if (response?.data?.is_verify) {
-
-            if (response?.data?.is_verify ) {
-                navigate("/")
-            }
-            else if (!response.data.is_profile_complete) {
-                navigate("/kycverification")
-            }
-            else if (response.data.is_profile_complete && !response.data.is_verify) {
-                navigate("/under-verification")
-
-            if(!response.data.is_profile_complete){
-                navigate("/kycverification")
-            }
-            if(response.data.is_profile_complete && !response.data.is_verify){
-                navigate("/under-verification")
-
-            }
-
-        } catch (error) {
-            toast.error(error.response.data.msg, {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-            setLoading(false);
-        }
+      if (response?.data?.is_verify) {
+        navigate('/');
+      } else if (!response.data.is_profile_complete) {
+        navigate('/kycverification');
+      } else if (
+        response.data.is_profile_complete &&
+        !response.data.is_verify
+      ) {
+        navigate('/under-verification');
+      }
+    } catch (error) {
+      toast.error(error.response.data.msg, {
+        position: 'top-center',
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+      setLoading(false);
     }
-}
+  };
+};
 
 export const RegisterAction = (setLoading, data, navigate) => {
   return async (dispatch) => {
@@ -183,55 +175,51 @@ export const VerifyAction = (data, navigate, setLoading) => {
 };
 
 export const patchProfile = (setLoading, data, navigate) => {
-    let formData = new FormData();
-    formData.append('gst_certificate', data.gst_certificate);
-    formData.append('gst_no', data.gst_no);
-    formData.append('pan_no', data.pan_no);
-    formData.append('pan_card', data.pan_card);
-    setLoading(true)
-    return async dispatch => {
-        await axios.patch(baseURL + `account/edit-profile/`, formData, {
-            headers: {
-                'content-type': 'multipart/form-data',
-                'content-type': 'multipart/form-data',
-            }
-        }).then((res) => {
-            toast.success("Document Uploading Done under KYC", {
-            toast.success("Document Uploading Done under KYC", {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-            setTimeout(() => {
-                setLoading(false)
-                navigate("/")
-            }, 2000)
-            setTimeout(()=>{
-            setLoading(false)
-            navigate("/")
-            },2000)
-        }).catch((err) => {
-            setLoading(false)
-            console.log(err?.response?.data)
-            console.log(err?.response?.data)
-            toast.error(err?.response?.data?.msg, {
-                position: "top-center",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-        })
-    }
-}
+  let formData = new FormData();
+  formData.append('gst_certificate', data.gst_certificate);
+  formData.append('gst_no', data.gst_no);
+  formData.append('pan_no', data.pan_no);
+  formData.append('pan_card', data.pan_card);
+  setLoading(true);
+  return async (dispatch) => {
+    await axiosIns
+      .patch(baseURL + `account/edit-profile/`, formData, {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        toast.success('Document Uploading Done under KYC', {
+          position: 'top-center',
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        setTimeout(() => {
+          setLoading(false);
+          navigate('/');
+        }, 2000);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err?.response?.data);
+        toast.error(err?.response?.data?.msg, {
+          position: 'top-center',
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+      });
+  };
+};
 
 export const GetCateogry = () => {
   return async (dispatch) => {
@@ -339,32 +327,31 @@ export const GetSubCateogry = (id, setData) => {
   };
 };
 
-export const GetProducts = (id, setData, setLoading) => {
-
 export const GetProducts = (id, setData, setLoading, role) => {
-    console.log("dd", role)
-    setLoading(true)
-    return async dispatch => {
-        await axios.get(baseURL + `product/sub-categories/${id}/`)
-            .then((res) => {
-                setData(res.data)
-                setData(res.data)
-                setLoading(false);
-            }).catch((err) => {
-                toast.error(err?.response?.data?.msg, {
-                    position: "top-center",
-                    autoClose: 1000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                });
-                setLoading(false);
-            })
-    }
-}
+  console.log('dd', role);
+  setLoading(true);
+  return async (dispatch) => {
+    await axios
+      .get(baseURL + `product/sub-categories/${id}/`)
+      .then((res) => {
+        setData(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.msg, {
+          position: 'top-center',
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        setLoading(false);
+      });
+  };
+};
 
 export const GetProduct = (id, role, setData, setLoading) => {
   console.log(role);
