@@ -121,10 +121,11 @@ export default function Header() {
                           setSub(item);
                           setIsOpen(!IsOpen);
                         }}
-                        className={`${item?.id === sub?.id
+                        className={`${
+                          item?.id === sub?.id
                             ? 'bg-[#df633a] text-white'
                             : 'bg-white'
-                          } box-border border-gray-200 border-2 hover:bg-[#df633a] hover:text-white text-black px-4 py-1 `}>
+                        } box-border border-gray-200 border-2 hover:bg-[#df633a] hover:text-white text-black px-4 py-1 `}>
                         <p>{item?.category_name}</p>
                       </button>
                     );
