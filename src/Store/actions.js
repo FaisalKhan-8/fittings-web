@@ -14,6 +14,8 @@ export const Init = () => {
       );
       const is_verified = JSON.parse(await localStorage.getItem('is_verified'));
       console.log('init', user_role);
+      const is_verified = JSON.parse(await localStorage.getItem('is_verified'));
+      console.log('init', user_role);
       dispatch(
         {
           type: 'LOGIN',
@@ -22,6 +24,7 @@ export const Init = () => {
             user_role: user_role === null ? 1 : user_role,
             profile_complete:
               profile_complete === null ? false : profile_complete,
+            is_verified: is_verified === null ? false : is_verified,
             is_verified: is_verified === null ? false : is_verified,
           },
         },
@@ -46,6 +49,7 @@ export const LoginAction = (setLoading, data, navigate) => {
         response.data.is_profile_complete
       );
       await localStorage.setItem('is_verified', response.data.is_verify);
+      await localStorage.setItem('is_verified', response.data.is_verify);
 
       dispatch({
         type: 'LOGIN',
@@ -53,6 +57,7 @@ export const LoginAction = (setLoading, data, navigate) => {
           access: response?.data?.access,
           user_role: response?.data?.user_role,
           profile_complete: response?.data?.is_profile_complete,
+          is_verified: response?.data?.is_verify,
           is_verified: response?.data?.is_verify,
         },
       });
